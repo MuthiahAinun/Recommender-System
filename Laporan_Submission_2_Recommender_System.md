@@ -71,7 +71,7 @@ Dataset ini terdiri dari beberapa file utama, yaitu:
 3. u.user: berisi informasi pengguna.
 4. u.genre: berisi daftar genre.
 ```
-Link Dataset : [https://grouplens.org/datasets/movielens/100k/]
+[Link Dataset](https://grouplens.org/datasets/movielens/100k/)
 
 **Dataset ini berisi 100.000 rating dari 943 pengguna terhadap 1.682 film. Data ini mencakup informasi mengenai ID pengguna, ID film, rating, dan timestamp.**
 
@@ -223,3 +223,5 @@ Kekurangan: CF membutuhkan data yang cukup banyak dan padat, sementara CBF berga
 
 _Catatan:_
 _Semua detail penjelasan setiap tahapan juga sudah ada dalam notebook._
+
+📧 Hubungi saya melalui [GitHub](https://github.com/MuthiahAinun) jika ada pertanyaan.
