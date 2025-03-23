@@ -53,9 +53,11 @@ B. Content-Based Filtering
 - Memberikan rekomendasi film serupa dengan film tertentu yang dipilih pengguna.
 ```
 **2. Menggabungkan kedua algoritma dengan metode Hybrid Filtering (CF + CBF)**
+
 Menggabungkan hasil rekomendasi dari Collaborative Filtering dan Content-Based Filtering.
 
 **3. Evaluasi Performa**
+
 Menggunakan metrik seperti MSE, RMSE, dan MAE.
 
 ---
@@ -69,6 +71,8 @@ Dataset ini terdiri dari beberapa file utama, yaitu:
 3. u.user: berisi informasi pengguna.
 4. u.genre: berisi daftar genre.
 ```
+Link Dataset : [https://grouplens.org/datasets/movielens/100k/]
+
 **Dataset ini berisi 100.000 rating dari 943 pengguna terhadap 1.682 film. Data ini mencakup informasi mengenai ID pengguna, ID film, rating, dan timestamp.**
 
 Berikut adalah uraian variabel-variabel atau fitur pada tiap dataset:
@@ -147,17 +151,21 @@ Mengapa Tahap Data Preparation Diperlukan:
 - Menghasilkan data yang lebih konsisten dan bebas dari error yang dapat mempengaruhi hasil prediksi.
 - Meningkatkan akurasi dan kinerja model dengan data yang bersih dan terstruktur.
 ```
-
+Berikut detail tahapannya :
 **A. Data Cleaning**
+
 Mengatasi permasalahan nilai hilang agar model tidak mengalami error atau bias.
 
 **B. Transformasi Data**
+
 Melakukan transformasi data sehingga lebih mudah diolah pada tahap modeling.
 
 **C. Penggabungan Dataset**
+
 Dataset ratings dan movies digabungkan berdasarkan kolom movieId. Hal ini dilakukan untuk mempermudah pembuatan matriks user-item yang mengandung informasi rating dan judul film.
 
 **D. Data Splitting**
+
 Pada Tahap ini data dibagi menjadi 80/20 untuk data training dan data testing.
 
 ## 📹Modeling
@@ -198,7 +206,7 @@ Kekurangan: CF membutuhkan data yang cukup banyak dan padat, sementara CBF berga
 3. Sementara itu, Hybrid Filtering yang menggabungkan CF dan CBF menghasilkan nilai MSE sebesar 8.1317, RMSE sebesar 2.8516, dan MAE sebesar 1.7434, yang lebih baik daripada CBF tetapi masih lebih rendah dibandingkan dengan CF.
 ```
 ---
-> Dari hasil tersebut, dapat disimpulkan bahwa Collaborative Filtering (CF) merupakan pilihan terbaik dalam hal akurasi rekomendasi pada kasus ini.
+> **Dari hasil tersebut, dapat disimpulkan bahwa Collaborative Filtering (CF) merupakan pilihan terbaik dalam hal akurasi rekomendasi pada kasus ini.**
 ---
 
 ## 📌Kesimpulan Akhir :
