@@ -19,7 +19,7 @@
 
 ### Problem Statements
 
-1. agaimana meningkatkan keterlibatan pengguna dengan menyediakan rekomendasi film yang lebih personal dan sesuai dengan preferensi mereka?
+1. Bagaimana meningkatkan keterlibatan pengguna dengan menyediakan rekomendasi film yang lebih personal dan sesuai dengan preferensi mereka?
 
 2. Bagaimana menciptakan sistem rekomendasi yang mampu meningkatkan loyalitas pelanggan dengan mempertimbangkan popularitas dan relevansi konten?
 
