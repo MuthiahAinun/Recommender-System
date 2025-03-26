@@ -155,6 +155,7 @@ Mengapa Tahap Data Preparation Diperlukan:
 - Meningkatkan akurasi dan kinerja model dengan data yang bersih dan terstruktur.
 ```
 Berikut detail tahapannya :
+
 **A. Data Cleaning**
 
 Mengatasi permasalahan nilai hilang agar model tidak mengalami error atau bias.
