@@ -19,19 +19,19 @@
 
 ### Problem Statements
 
-1. Bagaimana cara merekomendasikan konten yang sesuai dengan preferensi pengguna secara akurat?
+1. agaimana meningkatkan keterlibatan pengguna dengan menyediakan rekomendasi film yang lebih personal dan sesuai dengan preferensi mereka?
 
-2. Bagaimana menggabungkan algoritma Collaborative Filtering dan Content-Based Filtering guna menghasilkan rekomendasi yang lebih bervariasi dan mempertimbangkan baik popularitas maupun kesamaan konten?
+2. Bagaimana menciptakan sistem rekomendasi yang mampu meningkatkan loyalitas pelanggan dengan mempertimbangkan popularitas dan relevansi konten?
 
-3. Bagaimana membandingkan performa antara algoritma Collaborative Filtering ,Content-Based Filtering, dan Hybrid-Filtering dalam memberikan rekomendasi?
+3. Bagaimana mengembangkan strategi rekomendasi yang dapat mengoptimalkan pengalaman pengguna sekaligus meningkatkan potensi pendapatan bisnis melalui langganan atau iklan?
 
 ### Goals
 
-1. Menghasilkan sistem rekomendasi film yang akurat dan relevan berdasarkan preferensi pengguna.
+1. Meningkatkan retensi pelanggan dengan menyediakan rekomendasi yang lebih akurat dan relevan untuk meningkatkan kepuasan pengguna.
 
-2. Menggabungkan kedua algoritma (CF dan CBF) dalam pendekatan Hybrid Filtering untuk memberikan rekomendasi yang lebih bervariasi dengan mempertimbangkan popularitas pengguna dan kesamaan konten.
+2. Mengembangkan sistem rekomendasi yang tidak hanya mempertimbangkan kesukaan pengguna tetapi juga memperhitungkan tren pasar dan popularitas konten untuk mendorong pertumbuhan bisnis.
 
-3. Membandingkan performa algoritma Collaborative Filtering (CF), Content-Based Filtering (CBF), dan Hybrid-Filtering menggunakan metrik evaluasi seperti MSE, RMSE, dan MAE.
+3. Mengevaluasi efektivitas strategi rekomendasi dalam meningkatkan keterlibatan pengguna dan konversi pelanggan, dengan tujuan mendukung pertumbuhan bisnis dan monetisasi platform secara optimal.
 
 ### Solution Approach
 **1. Menggunakan 2 algoritma utama, yaitu:**
@@ -54,7 +54,8 @@ B. Content-Based Filtering
 ```
 **2. Menggabungkan kedua algoritma dengan metode Hybrid Filtering (CF + CBF)**
 
-Menggabungkan hasil rekomendasi dari Collaborative Filtering dan Content-Based Filtering.
+- Menggabungkan hasil rekomendasi dari Collaborative Filtering dan Content-Based Filtering.
+- Memastikan rekomendasi lebih bervariasi dan mempertimbangkan baik popularitas pengguna maupun kesamaan konten.
 
 **3. Evaluasi Performa**
 
@@ -74,6 +75,8 @@ Dataset ini terdiri dari beberapa file utama, yaitu:
 [Link Dataset](https://grouplens.org/datasets/movielens/100k/)
 
 **Dataset ini berisi 100.000 rating dari 943 pengguna terhadap 1.682 film. Data ini mencakup informasi mengenai ID pengguna, ID film, rating, dan timestamp.**
+
+**Kondisi dataset 'movies' memiliki beberapa nilai hilang, terutama pada kolom release_date (1 nilai hilang), video_release_date (1.682 nilai hilang), dan IMDb_URL (3 nilai hilang). Sementara itu, dataset 'ratings', 'genres', dan 'users' tidak memiliki nilai hilang.**
 
 Berikut adalah uraian variabel-variabel atau fitur pada tiap dataset:
 ```
@@ -172,6 +175,56 @@ Pada Tahap ini data dibagi menjadi 80/20 untuk data training dan data testing.
 ```
 Kelebihan: CF dapat memanfaatkan interaksi pengguna, sedangkan CBF dapat merekomendasikan item baru.
 Kekurangan: CF membutuhkan data yang cukup banyak dan padat, sementara CBF bergantung pada informasi konten.
+
+Berikut penjelasan cara kerja setiap algoritma yang digunakan dalam solusi rekomendasi beserta parameter yang digunakan:
+
+1. Collaborative Filtering (CF) - Singular Value Decomposition (SVD)
+Collaborative Filtering menggunakan pendekatan berbasis pengguna dan item untuk mengidentifikasi pola preferensi pengguna berdasarkan interaksi sebelumnya. Dalam implementasi ini, digunakan Singular Value Decomposition (SVD) untuk memprediksi rating film yang belum ditonton pengguna.
+
+📌Cara Kerja:
+
+- Membentuk User-Item Matrix, yaitu matriks yang merepresentasikan hubungan antara pengguna (user) dan film (item) berdasarkan rating yang diberikan. Jika pengguna belum memberikan rating, nilai diisi dengan 0.
+
+- Mengubah matriks ini menjadi format sparse matrix menggunakan csr_matrix() dari SciPy, karena sebagian besar nilai dalam matriks ini adalah nol (sparsity).
+
+- Menggunakan SVD (svds()) untuk mendekomposisi matriks menjadi tiga komponen:
+
+  1. U: Matriks fitur pengguna (dimensi: jumlah pengguna × k)
+
+  2. σ (sigma): Matriks diagonal dengan singular values (dimensi: k × k)
+
+  3. Vt: Matriks fitur film (dimensi: k × jumlah film)
+
+- Melakukan perkalian kembali U × sigma × Vt untuk membentuk matriks prediksi rating.
+
+- Hasilnya digunakan untuk merekomendasikan film dengan prediksi rating tertinggi bagi pengguna.
+
+🪢Parameter yang Digunakan:
+
+- k=50 → Menentukan jumlah fitur laten (latent factors) dalam dekomposisi SVD. Default tidak digunakan; angka 50 dipilih untuk keseimbangan antara akurasi dan efisiensi.
+
+- fillna(0) → Mengisi nilai kosong dalam user-item matrix dengan 0 agar bisa diproses oleh SVD.
+
+- csr_matrix(user_item_matrix) → Mengubah user-item matrix menjadi sparse matrix agar lebih efisien dalam penyimpanan dan komputasi.
+
+2. Content-Based Filtering (CBF) - TF-IDF & Cosine Similarity
+Content-Based Filtering merekomendasikan film berdasarkan kesamaan atribut film, dalam hal ini menggunakan judul film sebagai fitur untuk menemukan kemiripan antar film.
+
+📌Cara Kerja:
+
+- Menggunakan TF-IDF (Term Frequency - Inverse Document Frequency) untuk mengubah judul film menjadi representasi vektor yang lebih bermakna.
+
+- Menghitung cosine similarity antar film berdasarkan representasi TF-IDF untuk menemukan film yang mirip satu sama lain.
+
+- Film yang memiliki nilai similarity tertinggi dengan film yang telah ditonton pengguna akan direkomendasikan.
+
+🪢Parameter yang Digunakan:
+
+- stop_words='english' → Menghilangkan kata-kata umum dalam bahasa Inggris yang tidak relevan untuk analisis.
+
+- fillna('') → Mengisi nilai kosong dalam kolom judul film agar tidak menyebabkan error saat diproses oleh TF-IDF.
+
+- cosine_similarity(tfidf_matrix) → Menghitung kesamaan antar film berdasarkan hasil vektorisasi TF-IDF.
 ```
 ## Evaluation
 `Matriks Evaluasi yang digunakan yaitu MSE, RMSE, dan MAE.`
@@ -199,11 +252,11 @@ Kekurangan: CF membutuhkan data yang cukup banyak dan padat, sementara CBF berga
 
 **Berdasarkan hasil evaluasi:**
 ```
-1. Model Collaborative Filtering (CF) menunjukkan performa terbaik dengan nilai MSE sebesar 0.3370, RMSE sebesar 0.5805, dan MAE sebesar 0.2707, mengindikasikan bahwa CF mampu memberikan rekomendasi dengan tingkat kesalahan yang rendah.
+1. Model Collaborative Filtering (CF) memberikan hasil prediksi dengan tingkat kesalahan yang paling rendah dibandingkan metode lainnya, dengan nilai MSE (0.3370), RMSE (0.5805), dan MAE (0.2707). Hal ini menunjukkan bahwa CF mampu menghasilkan rekomendasi dengan akurasi yang sangat baik, sehingga dapat meningkatkan pengalaman pengguna dan memperkuat loyalitas pelanggan.
 
-2. Sebaliknya, Content-Based Filtering (CBF) memiliki performa yang lebih rendah dengan MSE sebesar 32.1889, RMSE sebesar 5.6735, dan MAE sebesar 3.4283, yang menunjukkan bahwa model ini kurang akurat dalam memprediksi rating pengguna.
+2. Sebaliknya, Content-Based Filtering (CBF) menunjukkan performa yang kurang optimal dengan nilai kesalahan yang cukup tinggi (MSE: 32.1889, RMSE: 5.6735, MAE: 3.4283). Model ini kurang efektif dalam memberikan rekomendasi yang akurat, yang dapat mengurangi kepuasan pengguna serta berpotensi menurunkan retensi pelanggan.
 
-3. Sementara itu, Hybrid Filtering yang menggabungkan CF dan CBF menghasilkan nilai MSE sebesar 8.1317, RMSE sebesar 2.8516, dan MAE sebesar 1.7434, yang lebih baik daripada CBF tetapi masih lebih rendah dibandingkan dengan CF.
+3. Sementara itu, Hybrid Filtering yang menggabungkan CF dan CBF menghasilkan performa yang berada di tengah-tengah, dengan nilai MSE (8.1317), RMSE (2.8516), dan MAE (1.7434). Meskipun hasilnya tidak sebaik CF secara murni, pendekatan ini tetap memberikan rekomendasi yang lebih bervariasi dengan mempertimbangkan popularitas pengguna (CF) dan kesamaan konten (CBF). Dengan demikian, Hybrid Filtering dapat meningkatkan eksplorasi konten pengguna sekaligus menjaga akurasi rekomendasi.
 ```
 ---
 > **Dari hasil tersebut, dapat disimpulkan bahwa Collaborative Filtering (CF) merupakan pilihan terbaik dalam hal akurasi rekomendasi pada kasus ini.**
@@ -211,14 +264,9 @@ Kekurangan: CF membutuhkan data yang cukup banyak dan padat, sementara CBF berga
 
 ## 📌Kesimpulan Akhir :
 ---
-> Dari hasil evaluasi dan perbandingan metode, dapat disimpulkan bahwa pendekatan Collaborative Filtering (CF) memberikan hasil prediksi dengan tingkat kesalahan yang paling rendah dibandingkan metode lainnya, dengan nilai MSE (0.3370), RMSE (0.5805), dan MAE (0.2707). Hal ini menunjukkan bahwa CF mampu menghasilkan rekomendasi dengan akurasi yang sangat baik.
+> Dari hasil evaluasi, dapat disimpulkan bahwa pendekatan Collaborative Filtering (CF) adalah solusi paling efektif dalam meningkatkan keterlibatan pengguna dan loyalitas pelanggan karena menghasilkan rekomendasi dengan akurasi tertinggi. Namun, pendekatan Hybrid Filtering tetap memiliki nilai strategis bagi bisnis karena memberikan variasi rekomendasi yang lebih luas, yang dapat membantu dalam strategi pemasaran berbasis rekomendasi serta meningkatkan waktu tontonan pengguna.
 
-> Metode Content-Based Filtering (CBF) menunjukkan performa yang kurang optimal dengan nilai kesalahan yang cukup tinggi (MSE: 32.1889, RMSE: 5.6735, MAE: 3.4283). Hal ini menunjukkan bahwa model CBF kurang efektif dalam memberikan rekomendasi yang akurat jika dibandingkan dengan CF.
-
-> Sementara itu, pendekatan Hybrid Filtering yang menggabungkan kekuatan CF dan CBF menghasilkan performa yang berada di tengah-tengah, dengan nilai MSE (8.1317), RMSE (2.8516), dan MAE (1.7434). Meskipun hasilnya tidak sebaik CF secara murni, pendekatan ini tetap memberikan rekomendasi yang lebih bervariasi dengan mempertimbangkan popularitas pengguna (CF) dan kesamaan konten (CBF).
----
----
-> **Saran:** Pemilihan metode yang tepat bergantung pada tujuan implementasi. Jika mengutamakan akurasi rekomendasi, Collaborative Filtering (CF) lebih unggul. Namun, jika membutuhkan rekomendasi yang lebih bervariasi dan tidak hanya mengandalkan data perilaku pengguna, Hybrid Filtering dapat menjadi pilihan yang lebih seimbang.
+> Secara keseluruhan, solusi yang diterapkan berhasil menjawab problem statements dan mencapai goals yang telah ditetapkan, terutama dalam hal meningkatkan retensi pelanggan dan mengoptimalkan monetisasi platform melalui pengalaman pengguna yang lebih personal dan relevan.
 ---
 
 _Catatan:_
