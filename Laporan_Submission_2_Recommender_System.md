@@ -372,7 +372,7 @@ Evaluasi strategi dalam mendukung konversi pelanggan dan monetisasi platform.
 
 2. Content-Based Filtering (CBF)
 
-⚠️ Dampak: Kurang akurat, namun penting untuk cold-start item.
+✅ Dampak: Menampilkan hasil yang lebih bervariasi, dan penting untuk cold-start item.
 
 🔁 Relevansi terhadap bisnis: Mendukung eksplorasi konten awal dan pengenalan film baru.
 
