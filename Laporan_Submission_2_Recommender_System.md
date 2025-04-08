@@ -344,35 +344,42 @@ Bagaimana mengembangkan strategi rekomendasi yang dapat mengoptimalkan pengalama
 
 
 **🎯 Pencapaian Goals**
+
 Goal 1:
 
 Meningkatkan retensi pelanggan melalui rekomendasi yang relevan dan akurat.
+
 ✅ CF berhasil mencapainya secara langsung melalui akurasi tinggi, yang berdampak pada pengalaman pengguna yang lebih personal.
 
 Goal 2:
 
 Mengembangkan sistem yang mempertimbangkan preferensi pengguna dan tren pasar.
+
 ✅ Hybrid model menggabungkan keduanya: rating kolektif (tren) dan kesamaan konten (preferensi), sehingga cocok untuk strategi pertumbuhan bisnis.
 
 Goal 3:
 
 Evaluasi strategi dalam mendukung konversi pelanggan dan monetisasi platform.
+
 ✅ Melalui metrik evaluasi model, didapatkan bahwa pendekatan CF paling kuat untuk meningkatkan konversi pelanggan karena presisi tinggi. Sementara hybrid mendukung monetisasi melalui peningkatan content discoverability.
 
 **🛠️ Solusi yang Diterapkan dan Dampaknya**
 1. Collaborative Filtering (CF)
 
 ✅ Dampak: Paling akurat dalam merepresentasikan preferensi pengguna.
+
 🔁 Relevansi terhadap bisnis: Peningkatan engagement dan loyalitas.
 
 2. Content-Based Filtering (CBF)
 
 ⚠️ Dampak: Kurang akurat, namun penting untuk cold-start item.
+
 🔁 Relevansi terhadap bisnis: Mendukung eksplorasi konten awal dan pengenalan film baru.
 
 3. Hybrid Filtering (CF + CBF)
 
 ✅ Dampak: Lebih bervariasi dan strategis secara bisnis.
+
 🔁 Relevansi terhadap bisnis: Meningkatkan waktu jelajah konten, mendukung eksposur dan iklan.
 
 ---
