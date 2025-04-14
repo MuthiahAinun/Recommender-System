@@ -8,7 +8,7 @@ Proyek ini bertujuan untuk membangun sistem rekomendasi film menggunakan tiga pe
 ## 🎯Tujuan
 1. Menghasilkan sistem rekomendasi film yang akurat dan relevan berdasarkan preferensi pengguna.
 2. Menggabungkan algoritma CF dan CBF dalam pendekatan Hybrid Filtering untuk menghasilkan rekomendasi yang lebih bervariasi.
-3. Membandingkan performa algoritma CF, CBF, dan Hybrid Filtering menggunakan metrik evaluasi MSE, RMSE, dan MAE.
+3. Membandingkan performa algoritma CF, CBF, dan Hybrid Filtering menggunakan metrik evaluasi Precision, Recall, dan F1.
 ---
 ## 📚Dataset
 Dataset yang digunakan terdiri dari beberapa file CSV:
@@ -29,13 +29,13 @@ Evaluasi dilakukan dengan tiga metrik:
 - **MAE (Mean Absolute Error)**
 ---
 ### Hasil Evaluasi
-| Algoritma          | MSE    | RMSE   | MAE   |
-|-------------------|--------|--------|-------|
-| Collaborative Filtering (CF) | 0.3370 | 0.5805 | 0.2707 |
-| Content-Based Filtering (CBF) | 32.1889 | 5.6735 | 3.4283 |
-| Hybrid Filtering  | 8.1317 | 2.8516 | 1.7434 |
+| Goals                                                | Evaluasi Model                         | Dampak terhadap Business Understanding           |
+|------------------------------------------------------|----------------------------------------|--------------------------------------------------|
+| Menyediakan rekomendasi film dengan akurasi tinggi   | Precision tinggi (1.00)                | ✅ Meningkatkan kepuasan & retensi pengguna       |
+| Fokus pada top picks yang benar-benar relevan        | Rekomendasi relevan & tepat sasaran    | ✅ Memperkuat kualitas rekomendasi                |
 
-**Dari hasil evaluasi, algoritma Collaborative Filtering menunjukkan performa terbaik dengan nilai MSE, RMSE, dan MAE terendah. Sementara itu, Hybrid Filtering memberikan rekomendasi yang lebih bervariasi dibandingkan CF murni.**
+
+**Hasil evaluasi menunjukkan bahwa model Collaborative Filtering, Content-Based Filtering, dan Hybrid Filtering memiliki precision yang tinggi, walau recall masih rendah. Artinya, sistem mampu memberikan rekomendasi yang sangat akurat (film yang direkomendasikan memang disukai pengguna), walau belum mampu menjangkau semua film relevan yang mungkin disukai oleh pengguna.**
 
 ---
 ## ⚙️Instalasi
@@ -50,6 +50,3 @@ pip install -r requirements.txt
    jupyter notebook Proyek_System_Recommendation_Tsamarah_Muthi'ah_A.ipynb
    ```
 2. Ikuti langkah-langkah di dalam notebook untuk melakukan pelatihan dan evaluasi model.
-
-## 🗝️Kesimpulan
-> Algoritma Collaborative Filtering merupakan pilihan terbaik untuk akurasi rekomendasi dalam proyek ini. Namun, Hybrid Filtering tetap memiliki nilai tambah dalam hal keragaman rekomendasi.
