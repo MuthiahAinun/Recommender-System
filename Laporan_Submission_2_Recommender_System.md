@@ -9,7 +9,7 @@
 
 > Menurut penelitian oleh Ricci et al. (2015), sistem rekomendasi dapat meningkatkan pendapatan hingga 20% pada platform digital. Sementara itu, Netflix melaporkan bahwa sekitar 80% dari total penayangan berasal dari saran yang diberikan oleh sistem rekomendasi mereka (Gomez-Uribe & Hunt, 2015). Hal ini menunjukkan betapa besar pengaruh algoritma rekomendasi terhadap perilaku pengguna dalam mengakses konten film.
 
-> Pada proyek ini, akan dikembangkan sistem rekomendasi khusus untuk konten film dengan menggunakan berbagai pendekatan algoritma, seperti Collaborative Filtering dan Content-Based Filtering. Selain itu, pendekatan Hybrid Filtering juga akan diterapkan untuk menggabungkan keunggulan dari kedua metode guna menghasilkan rekomendasi yang lebih beragam. Tujuan akhir dari proyek ini adalah menciptakan sistem yang dapat memberikan rekomendasi film yang relevan dan memuaskan berdasarkan minat serta riwayat tontonan pengguna.
+> Pada proyek ini, akan dikembangkan sistem rekomendasi khusus untuk konten film dengan menggunakan berbagai pendekatan algoritma, seperti Collaborative Filtering dan Content-Based Filtering. Selain itu, pendekatan Hybrid Filtering juga akan diterapkan untuk menggabungkan keunggulan dari kedua metode guna menghasilkan rekomendasi yang lebih beragam. Tujuan akhir dari proyek ini adalah menciptakan sistem yang dapat memberikan rekomendasi film yang relevan berdasarkan minat serta riwayat tontonan pengguna.
 
 **Referensi:**
 
@@ -21,34 +21,30 @@
 
 ### Problem Statements
 
-1. Bagaimana meningkatkan keterlibatan pengguna dengan menyediakan rekomendasi film yang lebih personal dan sesuai dengan preferensi mereka?
+1. Bagaimana menyediakan rekomendasi film yang relevan dan tepat sasaran, meskipun cakupan item yang direkomendasikan masih terbatas?
 
-2. Bagaimana menciptakan sistem rekomendasi yang mampu meningkatkan loyalitas pelanggan dengan mempertimbangkan popularitas dan relevansi konten?
-
-3. Bagaimana mengembangkan strategi rekomendasi yang dapat mengoptimalkan pengalaman pengguna sekaligus meningkatkan potensi pendapatan bisnis melalui langganan atau iklan?
+2. Bagaimana membangun sistem rekomendasi yang efisien untuk membantu pengguna menemukan film-film berkualitas tinggi yang sesuai dengan selera mereka?
 
 ### Goals
 
-1. Meningkatkan retensi pelanggan dengan menyediakan rekomendasi yang lebih akurat dan relevan untuk meningkatkan kepuasan pengguna.
+1. Menyediakan rekomendasi film dengan akurasi tinggi (high precision), agar pengalaman pengguna lebih menyenangkan dan terpercaya.
 
-2. Mengembangkan sistem rekomendasi yang tidak hanya mempertimbangkan kesukaan pengguna tetapi juga memperhitungkan tren pasar dan popularitas konten untuk mendorong pertumbuhan bisnis.
-
-3. Mengevaluasi efektivitas strategi rekomendasi dalam meningkatkan keterlibatan pengguna dan konversi pelanggan, dengan tujuan mendukung pertumbuhan bisnis dan monetisasi platform secara optimal.
+2. Fokus pada top picks yang benar-benar relevan, meskipun jumlah film yang terjangkau masih terbatas.
 
 ### Solution Approach
 **1. Menggunakan 2 algoritma utama, yaitu:**
 ```
 A. Collaborative Filtering
 
-- Menggunakan pendekatan berbasis pengguna dan item untuk mengidentifikasi kesamaan antara pengguna atau film.
+- Menggunakan SVD untuk memprediksi rating berdasarkan interaksi pengguna.
 
-- Menggunakan teknik Singular Value Decomposition (SVD) untuk memprediksi rating film yang belum ditonton oleh pengguna.
+- Efektif menghasilkan rekomendasi yang sangat sesuai untuk pengguna aktif.
 
-- Menghasilkan rekomendasi film dengan memilih film dengan peringkat tertinggi dalam hasil prediksi.
+- Memiliki precision tinggi, cocok untuk menyajikan film yang "pasti disukai".
 
 B. Content-Based Filtering
 
-- Menggunakan fitur konten film (judul, genre) untuk menghasilkan rekomendasi.
+- Menggunakan kemiripan konten (judul & genre) untuk membuat rekomendasi berdasarkan film yang sudah disukai.
 
 - Menggunakan teknik TF-IDF (Term Frequency-Inverse Document Frequency) dan Cosine Similarity untuk mengukur kemiripan antar film.
 
@@ -61,7 +57,7 @@ B. Content-Based Filtering
 
 **3. Evaluasi Performa**
 
-Menggunakan metrik seperti MSE, RMSE, dan MAE.
+Menggunakan metrik seperti Precision, Recall, dan F1.
 
 ---
 ## 🔎Data Understanding
@@ -155,33 +151,56 @@ genreId: Merupakan ID unik dari genre film.
 
 ## ✨ Data Preparation
 
-**Pada tahap ini langkah yang dilakukan yaitu mengubah .u file menjadi csv file, pengecekan dan penanganan data hilang, transformasi data, penggabungan dataset ratings dan movies untuk mempermudah pembuatan matriks user-item yang mengandung informasi rating dan judul film pembagian data, serta Menggunakan TF-IDF Vectorizer untuk algoritma CBF untuk mengubah judul film menjadi representasi vektor numerik yang bermakna.** 
-```
-Mengapa Tahap Data Preparation Diperlukan:
-- Mengatasi data yang hilang agar tidak mengganggu proses analisis dan model.
-- Melakukan transformasi agar data lebih terstruktur dan dapat digunakan oleh model.
-- Menghasilkan data yang lebih konsisten dan bebas dari error yang dapat mempengaruhi hasil prediksi.
-- Meningkatkan akurasi dan kinerja model dengan data yang bersih dan terstruktur.
-```
-Berikut detail tahapannya :
+**Data preparation adalah tahap penting sebelum analisis atau modeling, karena bertujuan untuk menghasilkan data yang bersih, terstruktur, dan siap digunakan oleh algoritma. Berikut adalah tahapan-tahapan lengkapnya:**
 
-**A. Data Cleaning**
+**1. Mengubah File `.u` Menjadi `.csv`**
+- File asli dari dataset MovieLens diubah ke format .csv agar bisa diolah menggunakan Python (pandas).
 
-Mengatasi permasalahan nilai hilang agar model tidak mengalami error atau bias.
+**2. Transformasi Kolom Timestamp**
+`ratings['timestamp'] = pd.to_datetime(ratings['timestamp'], unit='s')`
 
-**Kondisi dataset 'movies' memiliki beberapa nilai hilang, terutama pada kolom release_date (1 nilai hilang), video_release_date (1.682 nilai hilang), dan IMDb_URL (3 nilai hilang). Sementara itu, dataset 'ratings', 'genres', dan 'users' tidak memiliki nilai hilang.**
+**Penjelasan:** Mengubah kolom timestamp dari format Unix time (detik) ke format datetime agar lebih mudah dianalisis.
 
-**B. Transformasi Data**
+**3. Pengecekan dan Penanganan Data Hilang**
 
-Melakukan transformasi data timestamp ke datetime sehingga lebih mudah diolah pada tahap modeling. 
+**Penjelasan:** Kondisi dataset 'movies' memiliki beberapa nilai hilang, terutama pada kolom release_date (1 nilai hilang), video_release_date (1.682 nilai hilang), dan IMDb_URL (3 nilai hilang). Sementara itu, dataset 'ratings', 'genres', dan 'users' tidak memiliki nilai hilang.
 
-**C. Penggabungan Dataset**
+`movies.drop(columns=['video_release_date'], inplace=True)`
 
-Dataset ratings dan movies digabungkan berdasarkan kolom movieId. Hal ini dilakukan untuk mempermudah pembuatan matriks user-item yang mengandung informasi rating dan judul film.
+**Penjelasan:** Menghapus kolom yang seluruhnya kosong karena tidak berguna untuk analisis.
 
-**D. Data Splitting**
+`movies.dropna(subset=['release_date', 'IMDb_URL'], inplace=True)`
 
-Pada Tahap ini data dibagi menjadi 80/20 untuk data training dan data testing.
+**Penjelasan:** Menghapus baris yang memiliki data penting (seperti release_date atau IMDb_URL) yang kosong, agar tidak mengganggu proses selanjutnya.
+
+**4. Penggabungan Data ratings dan movies**
+
+`data = pd.merge(ratings, movies, on='movieId')`
+**Penjelasan:** Penggabungan ini menyatukan informasi rating dan informasi film (judul, tanggal rilis, genre, dll.) dalam satu dataframe. Penting untuk membuat fitur gabungan dan membangun matriks user-item yang lengkap.
+
+**5. Transformasi Data ke User-Item Matrix**
+
+`user_item_matrix = data.pivot(index='userId', columns='movieId', values='rating').fillna(0)`
+
+**Penjelasan:** Mengubah data ke bentuk matriks 2D (user x movie) yang berisi nilai rating. Nilai kosong diisi dengan 0 sebagai tanda user belum memberikan rating.
+
+**6. Konversi ke Sparse Matrix**
+
+`user_item_matrix_sparse = csr_matrix(user_item_matrix)`
+
+**Penjelasan:** Menghemat memori dan mempercepat komputasi dengan merepresentasikan matriks besar (dengan banyak nol) dalam format sparse.
+
+**7. Ekstraksi Fitur dari Judul dan Genre Film (TF-IDF)**
+`
+tfidf = TfidfVectorizer(stop_words='english')
+tfidf_matrix = tfidf.fit_transform(movies['combined'].fillna(''))
+`
+**Penjelasan:**
+
+- Mengubah teks judul film menjadi vektor numerik menggunakan metode TF-IDF.
+- TF-IDF (Term Frequency-Inverse Document Frequency) mengukur seberapa penting suatu kata dalam dokumen (judul) relatif terhadap keseluruhan dokumen.
+- Representasi ini digunakan dalam Content-Based Filtering untuk mencari kemiripan antar film berdasarkan **judul dan genre**.
+
 
 ## 📹Modeling
 ```
@@ -240,149 +259,155 @@ Ket : Nilai cosine similarity berada di rentang 0 hingga 1, dengan 1 berarti san
 
 - cosine_similarity(tfidf_matrix) → Menghitung kesamaan antar film berdasarkan hasil vektorisasi TF-IDF.
 
-3. Model hybrid dalam proyek ini menggabungkan hasil prediksi dari model Collaborative Filtering dan Content-Based Filtering secara linier, untuk mendapatkan prediksi rating yang lebih beragam.
+3. Model hybrid dalam proyek ini menggabungkan prediksi dari Collaborative Filtering (CF) dan Content-Based Filtering (CBF) secara linier, untuk menghasilkan rekomendasi yang lebih seimbang antara preferensi pengguna dan kemiripan konten film.
 
 📌 Konsep Penggabungan:
-- CF Prediction (pred_ratings): Hasil dari model SVD.
 
-- CBF Prediction (cbf_pred): Dihitung dari dot product antara user_item_matrix dan content_sim, sehingga mewakili skor preferensi berdasarkan kemiripan konten.
+1. CF Prediction (pred_ratings_df):
 
-- Hybrid Score: Gabungan linier dari keduanya menggunakan bobot alpha = 0.5 agar kombinasi seimbang.
+Prediksi rating yang dihasilkan oleh model Singular Value Decomposition (SVD) berdasarkan pola interaksi pengguna terhadap film.
 
-📈 Keunggulan:
+2. CBF Prediction (user_item_matrix @ content_sim):
 
-- Menyeimbangkan antara kekuatan CF (menggunakan data interaksi pengguna) dan CBF (menggunakan konten item).
-- Mengatasi cold-start item (dari sisi CBF) dan cold-start user (jika punya cukup rating item mirip).
+Skor preferensi berdasarkan kemiripan konten antar film, dihitung melalui dot product antara user_item_matrix dan matriks kemiripan konten (content_sim).
+
+Hybrid Score: Gabungan linier dari CF dan CBF dengan formula:
+
+[hybrid_score = alpha * cf_score + (1 - alpha) * cbf_score]
+
+Nilai alpha = 0.5 digunakan untuk memberi bobot seimbang antara CF dan CBF.
+
+📈 Keunggulan Model Hybrid:
+
+✅ Mengombinasikan kekuatan dua pendekatan:
+
+- CF memanfaatkan interaksi pengguna-berbasis rating.
+
+- CBF mempertimbangkan fitur konten dari film (misalnya judul, genre).
+
+🔄 Mengurangi masalah cold-start:
+
+- Cold-start item: Film baru tanpa rating tetap bisa direkomendasikan melalui kemiripan konten (CBF).
+
+- Cold-start user: Jika user memiliki beberapa interaksi, CF tetap bisa berkontribusi dalam prediksi.
+
+🎯 Rekomendasi lebih personal dan relevan, karena mempertimbangkan baik preferensi eksplisit pengguna maupun kemiripan film yang pernah disukai.
 ```
 
 ### Hasil Top-N Rekomendasi
-**Hasil Collaborative Filtering (User ID = 1):**
-- Toy Story (1995): Film animasi keluarga dengan cerita persahabatan mainan.
-- Star Wars (1977): Film fiksi ilmiah klasik tentang perjuangan melawan Kekaisaran.
-- Blade Runner (1982): Film fiksi ilmiah bertema dystopia dan robot manusia.
-- Fargo (1996): Drama kriminal dengan cerita penuh misteri.
-- 2001: A Space Odyssey (1968): Film fiksi ilmiah epik karya Stanley Kubrick.
-- Aliens (1986) dan Alien (1979): Film horor fiksi ilmiah dengan tema invasi alien.
-- Chasing Amy (1997) dan Full Monty, The (1997): Film drama dan komedi romantis.
+**✅ Rekomendasi CF untuk User ID = 1 (Top-10):**
+- Toy Story (1995)
+- Usual Suspects, The (1995)
+- Star Wars (1977)
+- Blade Runner (1982)
+- Fargo (1996)
+- 2001: A Space Odyssey (1968)
+- Aliens (1986)
+- Alien (1979)
+- Chasing Amy (1997)
+- Full Monty, The (1997)
 
-**Hasil Content-Based Filtering (Movie ID = 1):**
-- Pyromaniac's Love Story, A (1995): Drama romantis dengan kisah cinta yang tidak biasa.
-- Philadelphia Story, The (1940): Drama komedi romantis klasik.
-- NeverEnding Story III, The (1994): Film petualangan fantasi keluarga.
-- FairyTale: A True Story (1997): Film drama keluarga dengan unsur fantasi.
-- Police Story 4: Project S (1993): Film aksi petualangan dengan elemen seni bela diri.
+**✅ Rekomendasi CBF untuk Movie ID 1 (Top-10):**
+- Pyromaniac's Love Story, A (1995)
+- Balto (1995)
+- Goofy Movie, A (1995)
+- NeverEnding Story III, The (1994)
+- Pocahontas (1995)
+- FairyTale: A True Story (1997)
+- Philadelphia Story, The (1940)
+- Story of Xinghua, The (1993)
+- Gumby: The Movie (1995)
+- Aladdin (1992)
 
+**✅ Rekomendasi Hybrid untuk User 1 (Top-10):**
+- Star Wars (1977)
+- Fargo (1996)
+- Empire Strikes Back, The (1980)
+- Aliens (1986)
+- Alien (1979)
+- Terminator, The (1984)
+- Star Trek: First Contact (1996)
+- Sneakers (1992)
+- Men in Black (1997)
+- Contact (1997)
 
 ## Evaluation
-`Matriks Evaluasi yang digunakan yaitu MSE, RMSE, dan MAE.`
 
-**MSE (Mean Squared Error):**
-```
-- Mengukur rata-rata kesalahan kuadrat antara nilai prediksi dan nilai aktual. Semakin kecil nilainya, semakin baik model dalam memprediksi nilai sebenarnya.
-- Formula: MSE = (1/n) * Σ(actual - predicted)^2
-- Metrik ini bekerja dengan menghitung selisih antara nilai aktual dan nilai prediksi, kemudian mengkuadratkan selisih tersebut dan menghitung rata-ratanya.
-- MSE sangat sensitif terhadap outlier karena menggunakan kuadrat dari kesalahan.
-```
+### Collaborative Filtering	
+**1. Precision@10: 1.00**
 
-**RMSE (Root Mean Squared Error):**
-```
-- Akar dari MSE, mengembalikan satuan data asli sehingga lebih mudah diinterpretasikan. Semakin rendah, semakin baik.
-- Formula: RMSE = sqrt(MSE)
-- Metrik ini bekerja dengan menghitung akar dari MSE, sehingga lebih mudah dipahami dalam konteks satuan aslinya.
-```
-**MAE (Mean Absolute Error):**
-```
-- Mengukur rata-rata kesalahan absolut antara nilai prediksi dan aktual. Semakin kecil nilainya, semakin akurat prediksi model.
-- Formula: MAE = (1/n) * Σ|actual - predicted|
-- Metrik ini bekerja dengan menghitung rata-rata dari nilai absolut kesalahan prediksi.
-```
+Precision yang mendekati 1 berarti hampir semua rekomendasi yang diberikan relevan (maksudnya, dari 10 film yang direkomendasikan, hampir semuanya adalah film yang disukai oleh pengguna).
 
-**Berdasarkan hasil evaluasi:**
-```
-1. Model Collaborative Filtering (CF) memberikan hasil prediksi dengan tingkat kesalahan yang paling rendah dibandingkan metode lainnya, dengan nilai MSE (0.3370), RMSE (0.5805), dan MAE (0.2707). Hal ini menunjukkan bahwa CF mampu menghasilkan rekomendasi dengan akurasi yang sangat baik, sehingga dapat meningkatkan pengalaman pengguna dan memperkuat loyalitas pelanggan.
+**2. Recall@10: 0.06**
 
-2. Sebaliknya, Content-Based Filtering (CBF) menunjukkan performa yang kurang optimal dengan nilai kesalahan yang cukup tinggi (MSE: 32.1889, RMSE: 5.6735, MAE: 3.4283). Model ini kurang efektif dalam memberikan rekomendasi yang akurat, yang dapat mengurangi kepuasan pengguna serta berpotensi menurunkan retensi pelanggan.
+Recall yang rendah menunjukkan bahwa meskipun rekomendasi sangat tepat (high precision), hanya sebagian kecil dari total film relevan yang disukai oleh pengguna yang ditemukan di rekomendasi. Ini mungkin disebabkan oleh jumlah film relevan yang lebih sedikit dibandingkan jumlah rekomendasi yang diberikan.
 
-3. Sementara itu, Hybrid Filtering yang menggabungkan CF dan CBF menghasilkan performa yang berada di tengah-tengah, dengan nilai MSE (8.1317), RMSE (2.8516), dan MAE (1.7434). Meskipun hasilnya tidak sebaik CF secara murni, pendekatan ini tetap memberikan rekomendasi yang lebih bervariasi dengan mempertimbangkan popularitas pengguna (CF) dan kesamaan konten (CBF). Dengan demikian, Hybrid Filtering dapat meningkatkan eksplorasi konten pengguna sekaligus menjaga akurasi rekomendasi.
-```
----
-> **Dari hasil tersebut, dapat disimpulkan bahwa Collaborative Filtering (CF) merupakan pilihan terbaik dalam hal akurasi rekomendasi pada kasus ini.**
----
+**3. F1 Score@10: 0.12**
+
+F1 Score yang rendah menunjukkan adanya trade-off antara Precision dan Recall, dengan Precision yang baik tetapi Recall yang rendah. Ini bisa jadi karena jumlah film relevan terbatas yang tersedia untuk pengguna, yang membuat recall rendah.
+
+### Content-Based Filtering	
+**Precision@10 = 0.70** → Dari 10 film yang direkomendasikan, hanya 7 yang dianggap relevan (disukai oleh user yang juga menyukai Movie ID 1).
+
+**Recall@10 = 0.01** → Dari semua film yang disukai oleh user yang juga menyukai Movie ID 1, hanya 1% yang berhasil ditemukan dalam rekomendasi.
+
+**F1 Score = 0.01** → Meskipun precision tinggi (0.70), recall yang sangat rendah (0.01) membuat F1 score ikut rendah. Ini berarti bahwa meskipun sebagian besar
+**Tujuan:** Rekomendasi item
+
+### Hybrid Filtering
+
+**📊 Precision@10: 1.00**
+
+Artinya 10 dari 10 film yang direkomendasikan ternyata disukai user (rating ≥ 4). Ini menunjukkan akurasi rekomendasi sangat tinggi dalam hal kesesuaian.
+
+**📈 Recall@10: 0.06**
+
+Dari semua film yang disukai oleh user, hanya sekitar 6% yang berhasil ditangkap oleh Top-10 rekomendasi. Ini menunjukkan bahwa cakupan rekomendasi masih terbatas terhadap keseluruhan preferensi user.
+
+**🎯 F1 Score@10: 0.12**
+
+Kombinasi dari precision dan recall. Meskipun precision sangat tinggi, recall yang rendah menurunkan F1 Score, artinya model masih bisa ditingkatkan dalam menjangkau lebih banyak film relevan bagi user.
+
+**Penjelasan:**
+
+1. Precision
+   **Mengukur seberapa banyak item yang direkomendasikan di Top-K yang benar-benar relevan bagi pengguna.**
+   _Precision@K= Jumlah item relevan di Top-K / K_
+   > Nilainya antara 0 dan 1. Semakin tinggi, semakin baik.
+
+2. Recall
+   **Recall@K mengukur seberapa banyak item yang relevan bagi pengguna yang berhasil direkomendasikan dalam Top-K.**
+   _Recall@K= Jumlah item relevan di Top-K / Jumlah total item relevan untuk user_
+   > Recall tinggi berarti sistem berhasil "menemukan" sebagian besar item relevan.
+
+3. F1
+   **F1@K adalah harmonic mean dari Precision@K dan Recall@K, digunakan untuk menyeimbangkan keduanya.**
+   _F1@K=2× Precision@K×Recall@K / Precision@K+Recall@K_
+   > Cocok jika ingin sistem yang tidak hanya akurat (precision) tapi juga komprehensif (recall).
+​
 
 ## 📌Kesimpulan Akhir :
 ---
-> Berdasarkan hasil evaluasi yang telah dilakukan, pendekatan **Collaborative Filtering (CF)** terbukti memberikan hasil prediksi paling akurat, dengan nilai **MSE: 0.3370, RMSE: 0.5805, dan MAE: 0.2707**. Ini menunjukkan bahwa CF mampu memberikan rekomendasi yang paling sesuai dengan preferensi pengguna, sehingga secara langsung berdampak pada peningkatan **keterlibatan pengguna (user engagement) dan loyalitas pelanggan**. Model ini juga secara efisien mengisi kekosongan informasi pada film yang belum ditonton pengguna, sehingga membantu pengguna tetap aktif di platform.
+> Hasil evaluasi menunjukkan bahwa model **Collaborative Filtering**, **Content-Based Filtering**, dan **Hybrid Filtering** memiliki precision yang tinggi, walau recall masih rendah. Artinya, sistem mampu memberikan rekomendasi yang sangat akurat (film yang direkomendasikan memang disukai pengguna), walau belum mampu menjangkau semua film relevan yang mungkin disukai oleh pengguna.
 
-> Namun demikian, pendekatan **Hybrid Filtering**, meskipun memiliki tingkat akurasi yang tidak setinggi CF (MSE: 8.1317, RMSE: 2.8516, MAE: 1.7434), tetap memiliki peran strategis dalam konteks **eksplorasi konten dan diversifikasi rekomendasi**. Dengan menggabungkan kekuatan CF (berbasis rating historis) dan CBF (berbasis kemiripan konten), hybrid model mampu memperluas cakupan rekomendasi, mendorong pengguna menemukan film baru, dan meningkatkan **waktu tontonan serta eksposur terhadap berbagai genre**, yang mendukung strategi monetisasi platform berbasis langganan dan iklan.
+- Precision tinggi (1.00) → rekomendasi tepat sasaran, meningkatkan kepercayaan dan kenyamanan pengguna.
 
-> Sebaliknya, pendekatan **Content-Based Filtering (CBF)** murni menghasilkan tingkat kesalahan yang tinggi (MSE: 32.1889, RMSE: 5.6735, MAE: 3.4283), yang menunjukkan keterbatasan dalam mempersonalisasi rekomendasi hanya berdasarkan informasi konten. CBF kurang efektif dalam membangun koneksi antar pengguna, dan tidak cukup kuat dalam mempertahankan pengguna jangka panjang.
+- Recall rendah (0.06) → sistem belum mampu menjangkau seluruh preferensi pengguna, tetapi tetap menjaga kualitas rekomendasi.
+
+- F1 Score rendah (0.12) → menjadi sinyal bahwa cakupan sistem masih bisa dikembangkan lebih luas untuk memperbaiki keseimbangan akurasi dan jangkauan.
 
 ### **💡Analisis Terhadap Business Understanding**
-**🎯Problem Statement 1:**
-
-Bagaimana meningkatkan keterlibatan pengguna dengan menyediakan rekomendasi film yang lebih personal dan sesuai dengan preferensi mereka?
-
-✔️ Terjawab.
-
-> Model CF memberikan rekomendasi yang sangat personal berdasarkan perilaku pengguna lain yang serupa, terbukti dari akurasi tinggi. Hybrid Filtering juga menambah lapisan rekomendasi dengan menyarankan film baru yang masih relevan secara konten.
-
-**🎯Problem Statement 2:**
-
-Bagaimana menciptakan sistem rekomendasi yang mampu meningkatkan loyalitas pelanggan dengan mempertimbangkan popularitas dan relevansi konten?
-
-✔️ Terjawab.
-
-> CF mempertimbangkan popularitas melalui data rating kolektif, sedangkan CBF menilai relevansi konten. Kombinasi keduanya pada hybrid model menciptakan sistem yang seimbang antara popularitas dan relevansi konten, mendorong pengguna untuk kembali dan menjelajahi lebih banyak konten.
-
-**🎯Problem Statement 3:**
-
-Bagaimana mengembangkan strategi rekomendasi yang dapat mengoptimalkan pengalaman pengguna sekaligus meningkatkan potensi pendapatan bisnis melalui langganan atau iklan?
-
-✔️ Terjawab.
-
-> Model rekomendasi yang akurat seperti CF mendorong retensi pengguna, yang merupakan metrik penting dalam monetisasi. Hybrid Filtering meningkatkan waktu jelajah dan variasi tontonan, mendukung peningkatan konsumsi konten dan membuka peluang untuk penempatan iklan serta loyalitas berlangganan jangka panjang.
-
-
-**🎯 Pencapaian Goals**
-
-Goal 1:
-
-Meningkatkan retensi pelanggan melalui rekomendasi yang relevan dan akurat.
-
-✅ CF berhasil mencapainya secara langsung melalui akurasi tinggi, yang berdampak pada pengalaman pengguna yang lebih personal.
-
-Goal 2:
-
-Mengembangkan sistem yang mempertimbangkan preferensi pengguna dan tren pasar.
-
-✅ Hybrid model menggabungkan keduanya: rating kolektif (tren) dan kesamaan konten (preferensi), sehingga cocok untuk strategi pertumbuhan bisnis.
-
-Goal 3:
-
-Evaluasi strategi dalam mendukung konversi pelanggan dan monetisasi platform.
-
-✅ Melalui metrik evaluasi model, didapatkan bahwa pendekatan CF paling kuat untuk meningkatkan konversi pelanggan karena presisi tinggi. Sementara hybrid mendukung monetisasi melalui peningkatan content discoverability.
-
-**🛠️ Solusi yang Diterapkan dan Dampaknya**
-1. Collaborative Filtering (CF)
-
-✅ Dampak: Paling akurat dalam merepresentasikan preferensi pengguna.
-
-🔁 Relevansi terhadap bisnis: Peningkatan engagement dan loyalitas.
-
-2. Content-Based Filtering (CBF)
-
-✅ Dampak: Menampilkan hasil yang lebih bervariasi, dan penting untuk cold-start item.
-
-🔁 Relevansi terhadap bisnis: Mendukung eksplorasi konten awal dan pengenalan film baru.
-
-3. Hybrid Filtering (CF + CBF)
-
-✅ Dampak: Lebih bervariasi dan strategis secara bisnis.
-
-🔁 Relevansi terhadap bisnis: Meningkatkan waktu jelajah konten, mendukung eksposur dan iklan.
-
 ---
+1. **Rekomendasi berkualitas tinggi**, meskipun belum mencakup semua kemungkinan preferensi.
+
+  - Ini cocok dengan hasil precision tinggi → sistem sudah efektif untuk menyajikan film yang pasti disukai.
+
+2. **Efisiensi dan kepercayaan pengguna** dalam eksplorasi konten.
+---
+
+|Goals                                              | Evaluasi Model                      | Dampak terhadap Business Understanding      |
+| Menyediakan rekomendasi film dengan akurasi tinggi | Precision tinggi (1.00)             | ✅ Meningkatkan kepuasan & retensi pengguna |
+| Fokus pada top picks yang benar-benar relevan      | Rekomendasi relevan & tepat sasaran | ✅ Memperkuat kualitas rekomendasi          
 
 _Catatan:_
 _Semua detail penjelasan setiap tahapan juga sudah ada dalam notebook._
