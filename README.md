@@ -24,9 +24,9 @@ Dataset yang digunakan terdiri dari beberapa file CSV:
 ---
 ## 💡Evaluasi Model
 Evaluasi dilakukan dengan tiga metrik:
-- **MSE (Mean Squared Error)**
-- **RMSE (Root Mean Squared Error)**
-- **MAE (Mean Absolute Error)**
+- **Precision**
+- **Recall**
+- **F1**
 ---
 ### Hasil Evaluasi
 | Goals                                                | Evaluasi Model                         | Dampak terhadap Business Understanding           |
