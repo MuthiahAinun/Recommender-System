@@ -157,6 +157,7 @@ genreId: Merupakan ID unik dari genre film.
 - File asli dari dataset MovieLens diubah ke format .csv agar bisa diolah menggunakan Python (pandas).
 
 **2. Transformasi Kolom Timestamp**
+
 `ratings['timestamp'] = pd.to_datetime(ratings['timestamp'], unit='s')`
 
 **Penjelasan:** Mengubah kolom timestamp dari format Unix time (detik) ke format datetime agar lebih mudah dianalisis.
@@ -176,6 +177,7 @@ genreId: Merupakan ID unik dari genre film.
 **4. Penggabungan Data ratings dan movies**
 
 `data = pd.merge(ratings, movies, on='movieId')`
+
 **Penjelasan:** Penggabungan ini menyatukan informasi rating dan informasi film (judul, tanggal rilis, genre, dll.) dalam satu dataframe. Penting untuk membuat fitur gabungan dan membangun matriks user-item yang lengkap.
 
 **5. Transformasi Data ke User-Item Matrix**
@@ -405,9 +407,10 @@ Kombinasi dari precision dan recall. Meskipun precision sangat tinggi, recall ya
 2. **Efisiensi dan kepercayaan pengguna** dalam eksplorasi konten.
 ---
 
-|Goals                                              | Evaluasi Model                      | Dampak terhadap Business Understanding      |
-| Menyediakan rekomendasi film dengan akurasi tinggi | Precision tinggi (1.00)             | ✅ Meningkatkan kepuasan & retensi pengguna |
-| Fokus pada top picks yang benar-benar relevan      | Rekomendasi relevan & tepat sasaran | ✅ Memperkuat kualitas rekomendasi          
+| Goals                                                | Evaluasi Model                         | Dampak terhadap Business Understanding           |
+|------------------------------------------------------|----------------------------------------|--------------------------------------------------|
+| Menyediakan rekomendasi film dengan akurasi tinggi   | Precision tinggi (1.00)                | ✅ Meningkatkan kepuasan & retensi pengguna       |
+| Fokus pada top picks yang benar-benar relevan        | Rekomendasi relevan & tepat sasaran    | ✅ Memperkuat kualitas rekomendasi                |
 
 _Catatan:_
 _Semua detail penjelasan setiap tahapan juga sudah ada dalam notebook._
